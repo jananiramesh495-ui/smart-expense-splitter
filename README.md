@@ -22,15 +22,13 @@ Everyone's share is ₹466.67. Naively, this could mean many small payments cris
 
 ## Screenshots
 
-<!-- Add screenshots here, e.g.: -->
-<!-- ![Add People](screenshots/add-people.png) -->
-<!-- ![Net Balances](screenshots/balances.png) -->
-<!-- ![Settlement Result](screenshots/settlement.png) -->
+<img width="1920" height="1080" alt="homepage" src="https://github.com/user-attachments/assets/bfac303d-669e-4cf7-9884-1f130fb9946a" />
+<img width="1920" height="1080" alt="adding user and group" src="https://github.com/user-attachments/assets/8d39877f-e029-42dd-878a-9d9f213a43a6" />
+<img width="1920" height="1080" alt="tripname" src="https://github.com/user-attachments/assets/fd22e645-2487-454f-8fd1-bfcadd1d1b31" />
+<img width="1920" height="1080" alt="expenses  " src="https://github.com/user-attachments/assets/727f064a-402f-4332-9df4-0d0dec2d3176" />
+<img width="1920" height="1080" alt="amount" src="https://github.com/user-attachments/assets/0636d8b7-90a7-49cc-bcea-5769db4f8b61" />
 
----
-
-## Tech Stack
-
+TECH STACK
 | Layer | Technology |
 |---|---|
 | Language | Java 21 |
