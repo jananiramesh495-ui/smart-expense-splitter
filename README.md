@@ -20,22 +20,6 @@ Everyone's share is ₹466.67. Naively, this could mean many small payments cris
 
 ---
 
-## Screenshots
-
-<img width="1920" height="1080" alt="homepage" src="https://github.com/user-attachments/assets/7694cb96-264d-49e0-b28e-de74a5a0ca39" />
-<img width="1920" height="1080" alt="adding user and group" src="https://github.com/user-attachments/assets/c430a453-6f51-42ff-bf90-097638322881" />
-<img width="1920" height="1080" alt="tripname" src="https://github.com/user-attachments/assets/2e98aac7-b390-451a-93ae-020fe8ca34d7" />
-<img width="1920" height="1080" alt="expenses  " src="https://github.com/user-attachments/assets/3eaf4662-8788-4408-ac56-ec936ada9627" />
-<img width="1920" height="1080" alt="amount" src="https://github.com/user-attachments/assets/7c84e0b7-d3fe-45e5-bf85-8ad47f68d1ce" />
-
-
-<!-- Add screenshots here, e.g.: -->
-<!-- ![Add People](screenshots/add-people.png) -->
-<!-- ![Net Balances](screenshots/balances.png) -->
-<!-- ![Settlement Result](screenshots/settlement.png) -->
-
----
-
 ## Tech Stack
 
 | Layer | Technology |
@@ -212,6 +196,15 @@ These are deliberate trade-offs made to keep the project focused and achievable 
 - **Greedy, not provably optimal** — see the algorithm section above.
 
 ---
+
+## Screenshots
+
+<img width="1920" height="1080" alt="homepage" src="https://github.com/user-attachments/assets/7694cb96-264d-49e0-b28e-de74a5a0ca39" />
+<img width="1920" height="1080" alt="adding user and group" src="https://github.com/user-attachments/assets/c430a453-6f51-42ff-bf90-097638322881" />
+<img width="1920" height="1080" alt="tripname" src="https://github.com/user-attachments/assets/2e98aac7-b390-451a-93ae-020fe8ca34d7" />
+<img width="1920" height="1080" alt="expenses  " src="https://github.com/user-attachments/assets/3eaf4662-8788-4408-ac56-ec936ada9627" />
+<img width="1920" height="1080" alt="amount" src="https://github.com/user-attachments/assets/7c84e0b7-d3fe-45e5-bf85-8ad47f68d1ce" />
+
 
 ## Tech Notes
 
