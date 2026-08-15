@@ -223,7 +223,7 @@
             <div class="field-row">
                 <div class="field">
                     <label for="expenseGroup">Group</label>
-                    <select id="expenseGroup"></select>
+                    <select id="expenseGroup" onchange="renderPayerOptions()"></select>
                 </div>
                 <div class="field">
                     <label for="expensePayer">Paid by</label>
@@ -234,8 +234,9 @@
                     <input type="number" id="expenseAmount" placeholder="900" min="0" step="100" onkeydown="if(event.key==='Enter'){event.preventDefault();addExpense();}" />
                 </div>
             </div>
-            <button class="btn-primary" onclick="addExpense()">Add expense</button>
+            <button class="btn-primary" id="addExpenseBtn" onclick="addExpense()">Add expense</button>
             <div class="status-line" id="expenseStatus"></div>
+            <p class="helper-note">Only people added as members of the selected group (step 02) can be picked as payer.</p>
 
             <div id="expenseList" style="margin-top:20px;"></div>
         </div>
@@ -315,7 +316,6 @@
             statusEl.textContent = `Added ${user.name}.`;
             statusEl.className = 'status-line ok';
             renderUserChips();
-            renderPayerOptions();
             renderMemberPicker();
         }catch(e){
             statusEl.textContent = 'Could not add person. Is the backend running?';
@@ -403,6 +403,7 @@
             await fetch(`${API}/groups/${groupId}/members/${userId}`, {method:'POST'});
             group.memberIds.push(userId);
             renderMemberPicker();
+            renderPayerOptions();
         }catch(e){
             alert('Could not add member. Is the backend running?');
         }
@@ -410,11 +411,29 @@
 
     function renderExpenseGroupOptions(){
         const sel = document.getElementById('expenseGroup');
+        const prev = sel.value;
         sel.innerHTML = groups.map(g => `<option value="${g.id}">${escapeHtml(g.name)}</option>`).join('');
+        if(prev && groups.some(g => String(g.id) === prev)) sel.value = prev;
+        renderPayerOptions();
     }
     function renderPayerOptions(){
+        const groupSel = document.getElementById('expenseGroup');
+        const addBtn = document.getElementById('addExpenseBtn');
         const sel = document.getElementById('expensePayer');
-        sel.innerHTML = users.map(u => `<option value="${u.id}">${escapeHtml(u.name)}</option>`).join('');
+        const groupId = Number(groupSel.value);
+        const group = groups.find(g => g.id === groupId);
+
+        if(!group || group.memberIds.length === 0){
+            sel.innerHTML = `<option value="">Add members to this group first</option>`;
+            sel.disabled = true;
+            if(addBtn) addBtn.disabled = true;
+            return;
+        }
+
+        const members = users.filter(u => group.memberIds.includes(u.id));
+        sel.disabled = false;
+        if(addBtn) addBtn.disabled = false;
+        sel.innerHTML = members.map(u => `<option value="${u.id}">${escapeHtml(u.name)}</option>`).join('');
     }
     function renderSettleGroupOptions(){
         const sel = document.getElementById('settleGroup');
@@ -433,8 +452,20 @@
         const amount = Number(document.getElementById('expenseAmount').value);
         const statusEl = document.getElementById('expenseStatus');
 
-        if(!groupId || !payerId || !amount || amount <= 0){
-            statusEl.textContent = 'Fill in group, payer, and a valid amount.';
+        const group = groups.find(g => g.id === groupId);
+
+        if(!groupId || !group || group.memberIds.length === 0){
+            statusEl.textContent = 'Add members to this group before logging an expense.';
+            statusEl.className = 'status-line err';
+            return;
+        }
+        if(!payerId || !group.memberIds.includes(payerId)){
+            statusEl.textContent = 'Pick a payer who is a member of this group.';
+            statusEl.className = 'status-line err';
+            return;
+        }
+        if(!amount || amount <= 0){
+            statusEl.textContent = 'Enter a valid amount.';
             statusEl.className = 'status-line err';
             return;
         }

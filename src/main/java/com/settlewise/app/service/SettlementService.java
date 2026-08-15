@@ -61,12 +61,15 @@ public class SettlementService {
             double amount = expense.getAmount();
             double share = amount / memberCount;
 
+            // Use merge() instead of get()+put() so a payer who isn't
+            // officially in "members" (e.g. added after the fact, or a data
+            // mismatch) doesn't cause a NullPointerException.
             String payerName = expense.getPaidBy().getName();
-            netBalances.put(payerName, netBalances.get(payerName) + amount);
+            netBalances.merge(payerName, amount, Double::sum);
 
             for (User member : members) {
                 String name = member.getName();
-                netBalances.put(name, netBalances.get(name) - share);
+                netBalances.merge(name, -share, Double::sum);
             }
         }
 
@@ -126,11 +129,11 @@ public class SettlementService {
             double share = amount / memberCount;
 
             String payerName = expense.getPaidBy().getName();
-            netBalances.put(payerName, netBalances.get(payerName) + amount);
+            netBalances.merge(payerName, amount, Double::sum);
 
             for (User member : members) {
                 String name = member.getName();
-                netBalances.put(name, netBalances.get(name) - share);
+                netBalances.merge(name, -share, Double::sum);
             }
         }
 
