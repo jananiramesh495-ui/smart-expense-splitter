@@ -18,7 +18,12 @@ public class ExpenseController {
 
     @PostMapping
     public Expense addExpense(@RequestBody ExpenseRequest request) {
-        return expenseService.addExpense(request.getAmount(), request.getPaidByUserId(), request.getGroupId());
+        return expenseService.addExpense(
+                request.getAmount(),
+                request.getCategory(),
+                request.getPaidByUserId(),
+                request.getGroupId()
+        );
     }
 
     @GetMapping("/group/{groupId}")
@@ -29,6 +34,7 @@ public class ExpenseController {
     // Small helper class to receive the JSON body for creating an expense
     public static class ExpenseRequest {
         private Double amount;
+        private String category;
         private Long paidByUserId;
         private Long groupId;
 
@@ -38,6 +44,14 @@ public class ExpenseController {
 
         public void setAmount(Double amount) {
             this.amount = amount;
+        }
+
+        public String getCategory() {
+            return category;
+        }
+
+        public void setCategory(String category) {
+            this.category = category;
         }
 
         public Long getPaidByUserId() {

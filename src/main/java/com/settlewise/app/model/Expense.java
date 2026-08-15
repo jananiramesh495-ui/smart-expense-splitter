@@ -16,6 +16,8 @@ public class Expense {
 
     private Double amount;
 
+    private String category;
+
     @ManyToOne
     @JoinColumn(name = "paid_by_user_id")
     private User paidBy;
@@ -28,8 +30,9 @@ public class Expense {
     public Expense() {
     }
 
-    public Expense(Double amount, User paidBy, Group group) {
+    public Expense(Double amount, String category, User paidBy, Group group) {
         this.amount = amount;
+        this.category = category;
         this.paidBy = paidBy;
         this.group = group;
     }
@@ -49,6 +52,14 @@ public class Expense {
 
     public void setAmount(Double amount) {
         this.amount = amount;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public User getPaidBy() {

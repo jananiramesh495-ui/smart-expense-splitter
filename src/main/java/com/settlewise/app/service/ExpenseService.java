@@ -21,11 +21,11 @@ public class ExpenseService {
         this.groupService = groupService;
     }
 
-    public Expense addExpense(Double amount, Long paidByUserId, Long groupId) {
+    public Expense addExpense(Double amount, String category, Long paidByUserId, Long groupId) {
         User paidBy = userService.getUserById(paidByUserId);
         Group group = groupService.getGroupById(groupId);
 
-        Expense expense = new Expense(amount, paidBy, group);
+        Expense expense = new Expense(amount, category, paidBy, group);
         return expenseRepository.save(expense);
     }
 
