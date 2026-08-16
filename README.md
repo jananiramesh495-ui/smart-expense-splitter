@@ -2,7 +2,7 @@
 
 A Spring Boot backend that splits group expenses and settles debts using a **greedy debt-minimization algorithm**. Enter who paid what, and the system calculates each person's net balance and generates the smallest practical set of settlement transactions — instead of everyone paying everyone.
 
-**Live demo:** https://smart-expense-splitter-4011.onrender.com
+**Live demo:** https://smart-expense-splitter-4011.onrender.com/
 *(Free-tier hosting — first load can take 30–50s if the server was asleep.)*
 
 ---
@@ -230,13 +230,11 @@ These are deliberate trade-offs made to keep the project focused and achievable 
 - **Expense category is a free label, not a strict enum in the database** — the frontend restricts input to a fixed dropdown for consistency, but the backend stores it as a plain string.
 
 ## Screenshots
-
-<img width="1920" height="1080" alt="homepage" src="https://github.com/user-attachments/assets/7ad2b49a-f813-47ce-8363-f563ba3adb10" />
-<img width="1920" height="1080" alt="adding user and group" src="https://github.com/user-attachments/assets/ef4b7cc0-109c-431e-b35a-44ff1812300c" />
-<img width="1920" height="1080" alt="tripname" src="https://github.com/user-attachments/assets/30259576-285f-4424-866f-0e4d7f06c879" />
-<img width="1920" height="1080" alt="expenses  " src="https://github.com/user-attachments/assets/437837dc-ee0c-4e91-ba19-647c8022165b" />
-<img width="1920" height="1080" alt="amount" src="https://github.com/user-attachments/assets/65cbdb1e-5917-4fc0-bb88-dd3015776eb7" />
-
+<img width="1920" height="1080" alt="homepage" src="https://github.com/user-attachments/assets/377c625e-ebbc-4deb-ab07-22d13b58a5c6" />
+<img width="1920" height="1080" alt="user group management" src="https://github.com/user-attachments/assets/6ebc7e8b-fbe2-4f2e-b5cd-9be7ae1722c9" />
+<img width="1920" height="1080" alt="log an expense" src="https://github.com/user-attachments/assets/edd4022d-10f0-475d-adb3-12852e66f7f4" />
+<img width="1920" height="1080" alt="net balances" src="https://github.com/user-attachments/assets/f28b8732-b881-4ddf-8372-9d0c0c6ffd33" />
+<img width="1920" height="1080" alt="settlements" src="https://github.com/user-attachments/assets/a4efe426-87ed-4401-b163-71d54c351f2e" />
 
 ## Tech Notes
 
