@@ -20,6 +20,16 @@ Everyone's share is ₹466.67. Naively, this could mean many small payments cris
 
 ---
 
+## Features
+
+- **Two-module UI**: the app is split into two navigable pages — a left sidebar (or top tab bar on mobile) lets you jump straight to either module, and "Next" / "Back" buttons move between them in sequence
+- Add people and organize them into groups
+- Add people to a group as **members** — only confirmed group members can be selected as the payer when logging an expense for that group, preventing mismatched or orphaned expense data
+- Log expenses with an amount, payer, and **category** (Food, Travel, Stay, Groceries, Shopping, Entertainment, Utilities, Medical, Other) — split equally across group members
+- View net balances per group, sorted by amount owed/owing
+- Calculate the minimized settlement (Settle Up) with a visual "mark as paid" checklist
+---
+
 ## Tech Stack
 
 | Layer | Technology |
@@ -64,6 +74,29 @@ dto          → response/request objects
 **Key relationships:**
 - `User` ↔ `Group` — Many-to-Many (a user can belong to multiple groups, a group has multiple users)
 - `Expense` → `User` / `Group` — Many-to-One (an expense belongs to one group and has one payer)
+- `Expense` also carries a **category** (e.g. Food, Travel, Stay) — a simple string field, purely for display/organization; it does not affect balance or settlement calculations.
+
+---
+
+## Module Structure
+
+The project is organized into **two functional modules**, reflected both in the codebase and in the UI itself:
+
+### Module 01 — User & Group Management
+Handles the people and groups that expenses are logged against.
+- `User`, `Group` models
+- `UserService`, `GroupService`
+- `UserController`, `GroupController`
+- **UI:** Add people → Create a group → Add people as group members
+
+### Module 02 — Expense & Settlement Engine
+Handles logging expenses and computing settlements.
+- `Expense` model
+- `ExpenseService`, `SettlementService`
+- `ExpenseController`, `SettlementController`
+- **UI:** Log an expense (with category) → View net balances → Calculate settlement
+
+The frontend presents these as two separate pages with a left-hand module navigator (a horizontal tab bar on smaller screens). Completing Module 01 surfaces a **"Next: Expenses & Settlement →"** button, and Module 02 has a **"← Back: User & Group Management"** button, so the two modules can also be worked through in sequence. Both modules run within the same Spring Boot application and share the same H2 database — the separation is architectural and presentational, not a separate deployment.
 
 ---
 
@@ -150,7 +183,7 @@ Round 2: largest debtor = A (-200), largest creditor = C (+200)
 | POST | `/api/users` | Create a user |
 | POST | `/api/groups` | Create a group |
 | POST | `/api/groups/{groupId}/users/{userId}` | Add a user to a group |
-| POST | `/api/expenses` | Log an expense |
+| POST | `/api/expenses` | Log an expense — body: `{ amount, category, paidByUserId, groupId }` |
 | GET | `/api/settlements/{groupId}/balances` | Get raw net balances per person |
 | GET | `/api/settlements/{groupId}` | Get minimized settlement transactions |
 
@@ -194,16 +227,15 @@ These are deliberate trade-offs made to keep the project focused and achievable 
 - **No authentication/security layer** — out of scope; the focus is the algorithm and core CRUD + settlement flow.
 - **"Mark as paid" is UI-only** — visual confirmation, not persisted to the database.
 - **Greedy, not provably optimal** — see the algorithm section above.
-
----
+- **Expense category is a free label, not a strict enum in the database** — the frontend restricts input to a fixed dropdown for consistency, but the backend stores it as a plain string.
 
 ## Screenshots
 
-<img width="1920" height="1080" alt="homepage" src="https://github.com/user-attachments/assets/7694cb96-264d-49e0-b28e-de74a5a0ca39" />
-<img width="1920" height="1080" alt="adding user and group" src="https://github.com/user-attachments/assets/c430a453-6f51-42ff-bf90-097638322881" />
-<img width="1920" height="1080" alt="tripname" src="https://github.com/user-attachments/assets/2e98aac7-b390-451a-93ae-020fe8ca34d7" />
-<img width="1920" height="1080" alt="expenses  " src="https://github.com/user-attachments/assets/3eaf4662-8788-4408-ac56-ec936ada9627" />
-<img width="1920" height="1080" alt="amount" src="https://github.com/user-attachments/assets/7c84e0b7-d3fe-45e5-bf85-8ad47f68d1ce" />
+<img width="1920" height="1080" alt="homepage" src="https://github.com/user-attachments/assets/7ad2b49a-f813-47ce-8363-f563ba3adb10" />
+<img width="1920" height="1080" alt="adding user and group" src="https://github.com/user-attachments/assets/ef4b7cc0-109c-431e-b35a-44ff1812300c" />
+<img width="1920" height="1080" alt="tripname" src="https://github.com/user-attachments/assets/30259576-285f-4424-866f-0e4d7f06c879" />
+<img width="1920" height="1080" alt="expenses  " src="https://github.com/user-attachments/assets/437837dc-ee0c-4e91-ba19-647c8022165b" />
+<img width="1920" height="1080" alt="amount" src="https://github.com/user-attachments/assets/65cbdb1e-5917-4fc0-bb88-dd3015776eb7" />
 
 
 ## Tech Notes
@@ -212,3 +244,4 @@ These are deliberate trade-offs made to keep the project focused and achievable 
 - H2 web console enabled at `/h2-console` for inspecting the database directly during development.
 - `@Table(name = "users")` is required on the `User` entity because `USER` is a reserved SQL keyword in H2 — using it as a table name causes a syntax conflict.
 - CORS is enabled globally for `/api/**` so the frontend (served from the same origin, but useful for local dev against a separate frontend) can call the backend freely.
+- **Net balance calculation uses `Map.merge()` instead of `get()`+`put()`** when accumulating a payer's balance. This guards against a `NullPointerException` if an expense's payer somehow isn't in the group's current member list (e.g. due to a data inconsistency), and complements the frontend-side rule that only confirmed group members can be selected as a payer in the first place.
